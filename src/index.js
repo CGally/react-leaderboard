@@ -17,7 +17,6 @@ class Leaderboard extends Component {
     this.filterRank = this.filterRank.bind(this);
     this.increasePage = this.increasePage.bind(this);
     this.decreasePage = this.decreasePage.bind(this);
-    this.setPage = this.setPage.bind(this);
   }
 
   componentDidMount() {
@@ -118,13 +117,6 @@ class Leaderboard extends Component {
     this.setState({ page: page});
   }
 
-  setPage(e) {
-    e.preventDefault();
-    let page = this.state.page;
-    page = e;
-    this.setState({ page: page});
-  }
-
   render() {
     return (
       <div>
@@ -157,9 +149,9 @@ class Leaderboard extends Component {
           </tbody>
         </table>
         <p onClick={ this.decreasePage }>prev</p>
-        { this.state.page == 1 ? null: <p> { this.state.page - 1 }</p>}
+        { this.state.page == 1 ? null: <p onClick={ this.decreasePage }> { this.state.page - 1 }</p>}
         <p> { this.state.page }</p>
-        { this.state.page < this.state.pageMax ? <p> { this.state.page + 1 }</p>: null }
+        { this.state.page < this.state.pageMax ? <p onClick={ this.increasePage }> { this.state.page + 1 }</p>: null }
         <p onClick={ this.increasePage }>next</p>
       </div>
     );
