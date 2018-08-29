@@ -7,7 +7,6 @@ class Leaderboard extends Component {
     this.state = {
       users: this.props.users,
       ranking: [],
-      colNames: [],
       asc: false,
       alph: false,
       page: 1,
@@ -49,15 +48,16 @@ class Leaderboard extends Component {
 
   sortUsers() {
     const ranking = this.state.ranking;
+    const paginate = this.props.paginate;
     if(this.state.asc === true) {
       ranking.sort(this.compareScore).reverse();
-      ranking.map((user, index) => user.page = Math.ceil((index+1)/this.state.paginate));
+      ranking.map((user, index) => user.page = Math.ceil((index+1)/paginate));
       this.setState({ ranking: ranking});
       this.setState({ asc: false});
       this.setState({ alph: false});
     } else {
       ranking.sort(this.compareScore);
-      ranking.map((user, index) => user.page = Math.ceil((index+1)/this.state.paginate));
+      ranking.map((user, index) => user.page = Math.ceil((index+1)/paginate));
       this.setState({ ranking: ranking});
       this.setState({ asc: true});
       this.setState({ alph: false});
@@ -66,15 +66,16 @@ class Leaderboard extends Component {
 
   sortUsersByName() {
     const ranking = this.state.ranking;
+    const paginate = this.props.paginate;
     if(this.state.alph === true) {
       ranking.sort(this.compareName).reverse();
-      ranking.map((user, index) => user.page = Math.ceil((index+1)/this.state.paginate));
+      ranking.map((user, index) => user.page = Math.ceil((index+1)/paginate));
       this.setState({ ranking: ranking});
       this.setState({ alph: false});
       this.setState({ asc: true});
     } else {
       ranking.sort(this.compareName);
-      ranking.map((user, index) => user.page = Math.ceil((index+1)/this.state.paginate));
+      ranking.map((user, index) => user.page = Math.ceil((index+1)/paginate));
       this.setState({ ranking: ranking});
       this.setState({ alph: true});
       this.setState({ asc: true});
