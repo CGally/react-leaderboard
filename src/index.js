@@ -8,23 +8,30 @@ class Leaderboard extends Component {
       users: this.props.users,
       ranking: [],
       colNames: [],
-      asc: false
+      asc: false,
+      alph: false,
+      page: 1,
+      pageMax: 1,
     };
     this.sortUsers = this.sortUsers.bind(this);
+    this.sortUsersByName = this.sortUsersByName.bind(this);
     this.filterRank = this.filterRank.bind(this);
+    this.increasePage = this.increasePage.bind(this);
+    this.decreasePage = this.decreasePage.bind(this);
+    this.setPage = this.setPage.bind(this);
   }
 
   componentDidMount() {
     const ranking = this.state.users;
-    ranking.sort(this.compare).reverse();
+    const paginate = this.props.paginate;
+    ranking.sort(this.compareScore).reverse();
     ranking.map((user, index) => user.rank = index +1);
-    ranking.map((user, index) => user.key = function(n) {
-        return this[Object.keys(this)[n]];
-    });
+    ranking.map((user, index) => user.page = Math.ceil((index+1)/paginate));
+    this.setState({ pageMax: ranking[ranking.length - 1].page})
     this.setState({ ranking: ranking});
   }
 
-  compare(a,b) {
+  compareScore(a,b) {
     if (a.score < b.score)
       return -1;
     if (a.score > b.score)
@@ -32,13 +39,44 @@ class Leaderboard extends Component {
     return 0;
   }
 
+  compareName(a,b) {
+    if (a.name < b.name)
+      return -1;
+    if (a.name > b.name)
+      return 1;
+    return 0;
+  }
+
   sortUsers() {
     const ranking = this.state.ranking;
     if(this.state.asc === true) {
-      this.setState({ ranking: ranking.sort(this.compare).reverse()});
+      ranking.sort(this.compareScore).reverse();
+      ranking.map((user, index) => user.page = Math.ceil((index+1)/this.state.paginate));
+      this.setState({ ranking: ranking});
       this.setState({ asc: false});
+      this.setState({ alph: false});
     } else {
-      this.setState({ ranking: ranking.sort(this.compare)});
+      ranking.sort(this.compareScore);
+      ranking.map((user, index) => user.page = Math.ceil((index+1)/this.state.paginate));
+      this.setState({ ranking: ranking});
+      this.setState({ asc: true});
+      this.setState({ alph: false});
+    }
+  }
+
+  sortUsersByName() {
+    const ranking = this.state.ranking;
+    if(this.state.alph === true) {
+      ranking.sort(this.compareName).reverse();
+      ranking.map((user, index) => user.page = Math.ceil((index+1)/this.state.paginate));
+      this.setState({ ranking: ranking});
+      this.setState({ alph: false});
+      this.setState({ asc: true});
+    } else {
+      ranking.sort(this.compareName);
+      ranking.map((user, index) => user.page = Math.ceil((index+1)/this.state.paginate));
+      this.setState({ ranking: ranking});
+      this.setState({ alph: true});
       this.setState({ asc: true});
     }
   }
@@ -54,38 +92,74 @@ class Leaderboard extends Component {
         newRanking.push(ranking[i]);
       }
     }
-    this.setState({ ranking: newRanking.sort(this.compare).reverse()});
+    newRanking.sort(this.compareScore).reverse();
+    newRanking.map((user, index) => user.page = Math.ceil((index+1)/5));
+    this.setState({ ranking: newRanking});
+    this.setState({ page: 1});
+    this.setState({ pageMax: newRanking[newRanking.length - 1].page})
+  }
+
+  increasePage(e) {
+    e.preventDefault();
+    let page = this.state.page;
+    if(page < this.state.pageMax){
+      page += 1;
+    }
+    this.setState({ page: page});
+  }
+
+  decreasePage(e) {
+    e.preventDefault();
+    let page = this.state.page;
+    if(page > 1){
+      page -= 1;
+    }
+    this.setState({ page: page});
+  }
+
+  setPage(e) {
+    e.preventDefault();
+    let page = this.state.page;
+    page = e;
+    this.setState({ page: page});
   }
 
   render() {
     return (
       <div>
-        <h1>Leaderboard</h1>
-        <form onChange={this.filterRank}>
-          Name: <input type="search" name="search" placeholder="Search"/>
-        </form>
         <table id="lBoard">
-          <colgroup>
-            <col id='user-name' />
-            <col id='high-score' />
-          </colgroup>
           <tbody className='ranking'>
             <tr>
-              <td className='rank' onClick={ this.sortUsers }> Rank </td> |
-              <td className='name'> Name </td> |
-              <td className='score' onClick={ this.sortUsers }> Score </td> |
+              <td colspan="10000"><h1>Leaderboard</h1></td>
+            </tr>
+            <tr>
+              <td colspan="10000">
+                <form onChange={this.filterRank}>
+                  Name: <input type="search" name="search" placeholder="Search"/>
+                </form>
+              </td>
+            </tr>
+            <tr>
+              <td className='rank-header' onClick={ this.sortUsers }> Rank </td>
+              <td className='rank-header' onClick={ this.sortUsersByName }> Name </td>
+              <td className='rank-header' onClick={ this.sortUsers }> Score </td>
             </tr>
             {
             this.state.ranking.map((user, index) =>
                <tr className='ranking' key={index}>
-                <td className='user-rank'> { user.rank } </td> |
-                <td className='user-name'> { user.name } </td> |
-                <td className='high-score'> { user.score } </td> |
+                { user.page == this.state.page ? <td className='data'>{ user.rank }</td> : null }
+                { user.page == this.state.page ? <td className='data'>{ user.name }</td> : null }
+                { user.page == this.state.page ? <td className='data'>{ user.score }</td> : null }
                </tr>
              )
            }
           </tbody>
         </table>
+        <p onClick={ this.decreasePage }>prev</p>
+        { this.state.page == 1 ? null: <p> { this.state.page - 1 }</p>}
+        <p> { this.state.page }</p>
+        { this.state.page < this.state.pageMax ? <p> { this.state.page + 1 }</p>: null }
+        <p onClick={ this.increasePage }>next</p>
       </div>
     );
   }

@@ -1,6 +1,6 @@
 {
   "name": "react-leaderboard",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A leaderboard component for React",
   "main": "dist/index.js",
   "scripts": {
@@ -17,6 +17,10 @@
   "peerDependencies": {
     "react": "^16.3.0",
     "react-dom": "^16.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CGally/react-leaderboard"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

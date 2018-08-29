@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { render} from 'react-dom';
+import { render } from 'react-dom';
 import Leaderboard from '../../src/';
 
 class App extends Component {
@@ -25,13 +25,14 @@ class App extends Component {
             {name: "Amanda", score: 31},
             {name: "Jamie", score: 100},
             {name: "Sarah", score: 56},
-            {name: "Owen", score: 45}]
+            {name: "Owen", score: 45}],
+    paginate: 3
   };
 }
   render() {
     return (
       <div className="App">
-        <Leaderboard users={this.state.users}/>
+        <Leaderboard users={this.state.users} paginate={this.state.paginate}/>
       </div>
     );
   }
