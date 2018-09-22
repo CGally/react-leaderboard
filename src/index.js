@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import './styles.css';
 
+/**
+   * @class Leaderboard
+   * @desc Compares the score property of each user object
+   * @param {Prop} users-an array of objects with name and score properties
+   * @param {Prop} paginate-integer to determine how many users to display on each page
+*/
 class Leaderboard extends Component {
   constructor(props) {
     super(props);
@@ -12,13 +18,17 @@ class Leaderboard extends Component {
       page: 1,
       pageMax: 1,
     };
-    this.sortUsers = this.sortUsers.bind(this);
+    this.sortUsersByScore = this.sortUsersByScore.bind(this);
     this.sortUsersByName = this.sortUsersByName.bind(this);
     this.filterRank = this.filterRank.bind(this);
     this.increasePage = this.increasePage.bind(this);
     this.decreasePage = this.decreasePage.bind(this);
   }
 
+  /**
+     * @function componentDidMount
+     * @desc Sorts users by score then adds a ranking key to each user object when the component loads. Then sets the ranking state
+  */
   componentDidMount() {
     const ranking = this.state.users;
     const paginate = this.props.paginate;
@@ -29,6 +39,11 @@ class Leaderboard extends Component {
     this.setState({ ranking: ranking});
   }
 
+  /**
+     * @function compareScore
+     * @desc Compares the score property of each user object
+     * @param {Object, Object} user
+  */
   compareScore(a,b) {
     if (a.score < b.score)
       return -1;
@@ -37,6 +52,11 @@ class Leaderboard extends Component {
     return 0;
   }
 
+  /**
+     * @function compareName
+     * @desc Compares the name property of each user object alphabetically
+     * @param {Object, Object} user
+  */
   compareName(a,b) {
     if (a.name < b.name)
       return -1;
@@ -45,7 +65,11 @@ class Leaderboard extends Component {
     return 0;
   }
 
-  sortUsers() {
+  /**
+     * @function sortUsersByScore
+     * @desc Sorts the ranking by score either ascending or descending
+  */
+  sortUsersByScore() {
     const ranking = this.state.ranking;
     const paginate = this.props.paginate;
     if(this.state.asc === true) {
@@ -63,6 +87,10 @@ class Leaderboard extends Component {
     }
   }
 
+  /**
+     * @function sortUsersByName
+     * @desc Sorts the ranking by name alphabetically either ascending or descending
+  */
   sortUsersByName() {
     const ranking = this.state.ranking;
     const paginate = this.props.paginate;
@@ -81,6 +109,11 @@ class Leaderboard extends Component {
     }
   }
 
+  /**
+     * @function filterRank
+     * @desc Filters through the ranking to find matches and sorts all matches by score
+     * @param {String} search input
+  */
   filterRank(e) {
     e.preventDefault();
     const ranking = this.state.users;
@@ -99,6 +132,11 @@ class Leaderboard extends Component {
     this.setState({ pageMax: newRanking[newRanking.length - 1].page})
   }
 
+  /**
+     * @function increasePage
+     * @desc Increments page by one
+     * @param {Event} Click
+  */
   increasePage(e) {
     e.preventDefault();
     let page = this.state.page;
@@ -108,6 +146,11 @@ class Leaderboard extends Component {
     this.setState({ page: page});
   }
 
+  /**
+     * @function increasePage
+     * @desc Decrements page by one
+     * @param {Event} Click
+  */
   decreasePage(e) {
     e.preventDefault();
     let page = this.state.page;
@@ -117,6 +160,10 @@ class Leaderboard extends Component {
     this.setState({ page: page});
   }
 
+  /**
+     * @function render
+     * @desc renders jsx
+  */
   render() {
     return (
       <div>
@@ -133,9 +180,9 @@ class Leaderboard extends Component {
               </td>
             </tr>
             <tr>
-              <td className='rank-header' onClick={ this.sortUsers }> Rank </td>
+              <td className='rank-header' onClick={ this.sortUsersByScore }> Rank </td>
               <td className='rank-header' onClick={ this.sortUsersByName }> Name </td>
-              <td className='rank-header' onClick={ this.sortUsers }> Score </td>
+              <td className='rank-header' onClick={ this.sortUsersByScore }> Score </td>
             </tr>
             {
             this.state.ranking.map((user, index) =>
