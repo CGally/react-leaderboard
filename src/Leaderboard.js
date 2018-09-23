@@ -10,6 +10,13 @@ import './styles.css';
 class Leaderboard extends Component {
   constructor(props) {
     super(props);
+
+    this.sortUsersByScore = this.sortUsersByScore.bind(this);
+    this.sortUsersByName = this.sortUsersByName.bind(this);
+    this.filterRank = this.filterRank.bind(this);
+    this.increasePage = this.increasePage.bind(this);
+    this.decreasePage = this.decreasePage.bind(this);
+
     this.state = {
       users: this.props.users,
       ranking: [],
@@ -18,11 +25,6 @@ class Leaderboard extends Component {
       page: 1,
       pageMax: 1,
     };
-    this.sortUsersByScore = this.sortUsersByScore.bind(this);
-    this.sortUsersByName = this.sortUsersByName.bind(this);
-    this.filterRank = this.filterRank.bind(this);
-    this.increasePage = this.increasePage.bind(this);
-    this.decreasePage = this.decreasePage.bind(this);
   }
 
   /**
@@ -115,8 +117,8 @@ class Leaderboard extends Component {
      * @param {String} search input
   */
   filterRank(e) {
-    e.preventDefault();
     const ranking = this.state.users;
+    const paginate = this.props.paginate;
     const newRanking = [];
     const inputLength = e.target.value.length
     for(var i = 0; i < ranking.length; i++) {
@@ -126,7 +128,7 @@ class Leaderboard extends Component {
       }
     }
     newRanking.sort(this.compareScore).reverse();
-    newRanking.map((user, index) => user.page = Math.ceil((index+1)/5));
+    newRanking.map((user, index) => user.page = Math.ceil((index+1)/paginate));
     this.setState({ ranking: newRanking});
     this.setState({ page: 1});
     this.setState({ pageMax: newRanking[newRanking.length - 1].page})
@@ -138,7 +140,6 @@ class Leaderboard extends Component {
      * @param {Event} Click
   */
   increasePage(e) {
-    e.preventDefault();
     let page = this.state.page;
     if(page < this.state.pageMax){
       page += 1;
@@ -152,7 +153,6 @@ class Leaderboard extends Component {
      * @param {Event} Click
   */
   decreasePage(e) {
-    e.preventDefault();
     let page = this.state.page;
     if(page > 1){
       page -= 1;
@@ -180,8 +180,8 @@ class Leaderboard extends Component {
               </td>
             </tr>
             <tr>
-              <td className='rank-header' onClick={ this.sortUsersByScore }> Rank </td>
-              <td className='rank-header' onClick={ this.sortUsersByName }> Name </td>
+              <td className='rank-header sortScore' onClick={ this.sortUsersByScore }> Rank </td>
+              <td className='rank-header sortAlpha' onClick={ this.sortUsersByName }> Name </td>
               <td className='rank-header' onClick={ this.sortUsersByScore }> Score </td>
             </tr>
             {
@@ -195,11 +195,11 @@ class Leaderboard extends Component {
            }
           </tbody>
         </table>
-        <p onClick={ this.decreasePage }>prev</p>
+        <p className='decrement' onClick={ this.decreasePage }>prev</p>
         { this.state.page == 1 ? null: <p onClick={ this.decreasePage }> { this.state.page - 1 }</p>}
         <p> { this.state.page }</p>
         { this.state.page < this.state.pageMax ? <p onClick={ this.increasePage }> { this.state.page + 1 }</p>: null }
-        <p onClick={ this.increasePage }>next</p>
+        <p className='increment' onClick={ this.increasePage }>next</p>
       </div>
     );
   }

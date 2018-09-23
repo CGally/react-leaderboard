@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import Leaderboard from '../../src/';
+import Leaderboard from '../../src/Leaderboard';
 
 class App extends Component {
   constructor(props) {
