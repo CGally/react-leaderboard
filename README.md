@@ -1,4 +1,6 @@
-
+![Circle CI Status](https://circleci.com/gh/CGally/react-leaderboard/tree/master.svg?style=shield)
+[![npm version](https://badge.fury.io/js/react-leaderboard.svg)](https://www.npmjs.com/package/react-leaderboard)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 # React-Leaderboard is a react component for creating leaderboards.
 
 
